@@ -7,7 +7,7 @@ public class Edge {
 
     public Edge(double weight, ConnectionNode startNode, ConnectionNode targetNode) {
 
-        this.weight = weight; //weight is representative of the cost of the trip
+        this.weight = weight; //weight is representative of the distance of an edge
         this.startNode = startNode;
         this.targetNode = targetNode;
     }

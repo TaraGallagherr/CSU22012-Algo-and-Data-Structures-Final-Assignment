@@ -3,9 +3,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 
     /*Finding shortest paths between 2 bus stops (as input by the user),
@@ -41,11 +39,12 @@ public class Section1 {
 
         public static ArrayList<String> startStops = new ArrayList<String>();
         public static ArrayList<String> finalStops = new ArrayList<String>();
-        public ArrayList<Edge> edges = new ArrayList<>();
+        //private static double cost;
+    public ArrayList<Edge> edges = new ArrayList<>();
         public static ArrayList<Double> costs = new ArrayList<Double>();
         public static HashMap<String,ConnectionNode> ConnectionNodesMap = new HashMap<>();
         public ArrayList<String[]> tripIdStops = new ArrayList<>();
-        public Double cost; //needed for when finding the shortest path
+        public static Double cost; //needed for when finding the shortest path
 
 
     String stopsPath = "C:\\Users\\tarag\\OneDrive\\Documents\\SecondYear\\Semester2\\Algo +Data 2\\src\\stops.txt";
@@ -123,7 +122,8 @@ public class Section1 {
             while(sc3.hasNextLine()) {
 
                 String a = sc3.nextLine();
-                String stopTimesArr[] = a.split(",");
+                String stopTimesArr[] = a.split(",");   //splitting the string into an array with an element
+                                                                //at each comma
 
                 String tripID = stopTimesArr[0];
 
@@ -168,6 +168,68 @@ public class Section1 {
         //STILL TO ADD
             // to add methods on finding the SP and then returning an array list of all intermediate stops included on the SP
 
+            //this mehtod computes SP from startStop to all nodes
+            // it returns the path of the SP betwenn start and destination node
+            // the path as an ArrayList
+            public static List<ConnectionNode> shortestPath(ConnectionNode startStop, ConnectionNode endStop){
+
+            //initialise minDist in ConnectionNode
+                startStop.setMinDist(0);
+
+                //creating empty priority queue of connectionNodes
+                // will access the weights to compare for SP
+                PriorityQueue<ConnectionNode > priorityQueue = new PriorityQueue<>();
+                //inserting the source node into the PQ
+                priorityQueue.add(startStop);
+
+                //while the PQ isnt empty, the min dist node from the PQ
+                while(!priorityQueue.isEmpty()){
+
+                    //extracting min dist node from the PQ and removing
+                    ConnectionNode node = priorityQueue.peek();
+                    priorityQueue.remove();
+
+                    //for(Node n : List l)
+                    //for(Node n = l.head; n.next != null; n = n.next)
+
+                    //looping through all adjacent of node
+                    for(Edge edge : node.getEdgesList()){
+
+                        ConnectionNode n = edge.getGoalNode();
+
+                        double dist = edge.getWeight();
+                        double minDist = node.getMinDist() + dist;
+
+                        //doing the following for every ConnectionNode n
+                        //if there is a shorter path to n through node
+                        //update distance of current n to minDist
+                        //insert n into the priority queue
+                        if (minDist < n.getMinDist()) {
+                            priorityQueue.remove(node);
+                            n.setPrevNode(node);
+                            n.setMinDist(minDist);
+                            priorityQueue.add(n);
+                        }
+
+                    }
+
+                }
+
+                //need to add eroor handling --> to only return shortest path if the path names are valid etc
+                // --> t be done in front end
+                List<ConnectionNode> shortestPath = new ArrayList<>();
+
+                cost = endStop.getMinDist();
+
+                //initialising start noed to end and working backwards to find al nodes on the SP found
+                for (ConnectionNode nodeOnShortestPath = endStop; nodeOnShortestPath != null; nodeOnShortestPath = nodeOnShortestPath.getPrevNode()) {
+                    shortestPath.add(nodeOnShortestPath);
+                }
+
+
+                return shortestPath;
+
+            }
     }
 
 

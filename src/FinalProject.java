@@ -31,10 +31,18 @@ public class FinalProject {
 
 
             //System.out.print(Section1.ConnectionNodesMap);
+        /*
         System.out.println(Collections.singletonList(Section1.ConnectionNodesMap));
         System.out.println(Section1.costs);
         System.out.println(Section1.finalStops);
         System.out.println(Section1.startStops);
+        */
+
+        //testing out shortest path method
+        ConnectionNode start = new ConnectionNode("1888");
+        ConnectionNode end = new ConnectionNode("11259");
+
+        System.out.print(Section1.shortestPath(start, end));
 
 
 

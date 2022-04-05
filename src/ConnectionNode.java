@@ -2,11 +2,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-    public class ConnectionNode  {
+    public class ConnectionNode implements Comparable<ConnectionNode> {
         public String name;
         private List<Edge> edges;
-        private double minDist = Double.MAX_VALUE;       //constant holding largesr possible value of type double
-                                                        // will be updated to become smaller as smaller distances found
+        //initialising all distances of nodes as infinite
+        private double minDist = Double.MAX_VALUE;
+        private ConnectionNode prevNode;
 
         public ConnectionNode(String name) {
             this.name = name;   //give the name of the node
@@ -36,6 +37,19 @@ import java.util.List;
         @Override
         public String toString() {
             return name;
+        }
+
+        public void setPrevNode(ConnectionNode prevNode){
+            this.prevNode = prevNode;
+        }
+
+        public ConnectionNode getPrevNode(){
+            return prevNode;
+        }
+
+        @Override
+        public int compareTo(ConnectionNode otherVertex) {
+            return Double.compare(this.minDist, otherVertex.minDist);
         }
 
     }
