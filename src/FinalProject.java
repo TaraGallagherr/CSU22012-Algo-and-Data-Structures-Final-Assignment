@@ -18,7 +18,7 @@ public class FinalProject {
         TRANSFERS = new File(transfersPath);
     }
 
-    public void userInteraction() throws FileNotFoundException {
+    public static void userInteraction() throws FileNotFoundException {
 
         String stopsPath = "C:\\Users\\tarag\\OneDrive\\Documents\\SecondYear\\Semester2\\Algo +Data 2\\src\\stops.txt";
         String stopTimesPath = "C:\\Users\\tarag\\OneDrive\\Documents\\SecondYear\\Semester2\\Algo +Data 2\\src\\stop_times.txt";
@@ -34,8 +34,8 @@ public class FinalProject {
         do{
             Scanner userInput = new Scanner(System.in);
             System.out.println("Please select one of the following options by entering 1,2,3 or 0 to exit the program");
-            System.out.println("1 = Find the shortest path between 2 bus stops" + "/n"
-                    + "2 = Search for a particular bus stop" + "/n"
+            System.out.println("1 = Find the shortest path between 2 bus stops " + "\n"
+                    + "2 = Search for a particular bus stop " + "\n"
                     + "3 = Seach for an arrival time");
 
             if(userInput.hasNextInt()){
@@ -49,31 +49,65 @@ public class FinalProject {
                         quit = true;
                     }
 
-                    else if ( input == 1){
+                    else if ( input == 1) {
 
                         String startInput;
-                        String destinationInput;
-                        Double cost = Section1.cost;
+                        String destinationInput = "";
+                        //Double cost = Section1.cost;
 
                         //making a hashMap for the stops for dijkstra
                         HashMap<String, ConnectionNode> stops = Section1.ConnectionNodesMap;
 
-                        System.out.print("PLease enter a starting bus stop ID:");
-                         //USER input
-                        startInput = userInput.nextLine();
+                        System.out.println("PLease enter a starting bus stop ID:");
+                        //USER input
+                        String tempStart = userInput.nextLine();
 
-                        System.out.print("Please enter a destination bus stop ID: ");
-                         //user input
-                         destinationInput = userInput.nextLine();
+                        startInput = tempStart;
 
-                         //error handling
-                         if( isNumeric(startInput) == false || isNumeric(destinationInput) == false){
-                             System.out.println("Your start and destination stop ID should only contain digits and should not be null");
-                         }
+                        /*System.out.println("Please enter a destination bus stop ID: ");
+                        //user input
+                        String tempDest ;
+                        tempDest = userInput.nextLine();
+                        destinationInput = tempDest;
 
-                         else{
+                         */
 
-                         }
+                        boolean check = true;
+
+                        //will continue to error check until the stops entered are valid
+                        while (check == true) {
+                            //error handling
+                            // calling isNumeric method to make the stop IDs entered are check
+                            if (isNumeric(startInput) == false || isNumeric(destinationInput) == false) {
+                                System.out.println("Your start and destination stop ID should only contain digits and should not be null");
+                                check = false;
+                            }
+
+                            //also need to make sure the bus stop IDs entered exist
+
+                            if (stops.get(startInput) == null || stops.get(destinationInput) == null) {
+
+                                System.out.println("Sorry the stops entered do not exist. try again");
+                                check = false;
+                            }
+
+                            //otherwise the stops are valid and can continue onto answering part 1
+                            else {
+                                //setting to false if they are valid so it will exit hte while loop
+                                check = false;
+                            }
+
+                        }
+
+                        ConnectionNode source = stops.get(startInput); //  ConnectionNode of the start stop
+                        ConnectionNode destination = stops.get(destinationInput);// ConnectionNode object of the destination stop
+
+                        //working out shortest path and then printing out the path
+                        System.out.println("The Shortest Path of bus stops from " + source.name + " to " + destination.name + " is "
+                                + Section1.shortestPath(source, destination));
+
+                        //Section1.cost ---> give the cost of the SP calculated--> print it out
+                        System.out.println("Cost of the Path: " + Section1.cost + "\n");
 
                     }
 
@@ -89,13 +123,13 @@ public class FinalProject {
                 }
 
                 else{
-                    System.out.println("Please enter a valid number");
+                    System.out.println("Please enter a check number");
                 }
 
             }
 
             else{
-                System.out.print("Please enter a valid number (1,2,3) or press 0 to exit the programme" );
+                System.out.print("Please enter a check number (1,2,3) or press 0 to exit the programme" );
             }
 
 
@@ -108,6 +142,7 @@ public class FinalProject {
 
     }
 
+    //method to check if the stop ID entered is numeric and not null. returns false if it is either
     public static boolean isNumeric(String strEntry){
         if (strEntry == null) {
             return false;
@@ -119,6 +154,8 @@ public class FinalProject {
         }
         return true;
     }
+
+
 
     public static void main(String[] args) throws FileNotFoundException {
 
@@ -146,7 +183,9 @@ public class FinalProject {
         ConnectionNode start = new ConnectionNode("1888");
         ConnectionNode end = new ConnectionNode("11259");
 
-        System.out.print(Section1.shortestPath(start, end));
+        //System.out.print(Section1.shortestPath(start, end));
+
+        FinalProject.userInteraction();
 
 
 
