@@ -36,12 +36,12 @@ public class FinalProject {
             System.out.println("Please select one of the following options by entering 1,2,3 or 0 to exit the program");
             System.out.println("1 = Find the shortest path between 2 bus stops " + "\n"
                     + "2 = Search for a particular bus stop " + "\n"
-                    + "3 = Seach for an arrival time");
+                    + "3 = Search for an arrival time");
 
             if(userInput.hasNextInt()){
 
                 int input = userInput.nextInt();
-
+                userInput.nextLine();
                 if(input >= 0 && input <=3){
 
                     if(input == 0){
@@ -61,21 +61,20 @@ public class FinalProject {
                         System.out.println("PLease enter a starting bus stop ID:");
                         //USER input
                         String tempStart = userInput.nextLine();
-
                         startInput = tempStart;
 
-                        /*System.out.println("Please enter a destination bus stop ID: ");
+                        System.out.println("Please enter a destination bus stop ID: ");
                         //user input
                         String tempDest ;
                         tempDest = userInput.nextLine();
                         destinationInput = tempDest;
 
-                         */
+
 
                         boolean check = true;
 
                         //will continue to error check until the stops entered are valid
-                        while (check == true) {
+                        while (check != true) {
                             //error handling
                             // calling isNumeric method to make the stop IDs entered are check
                             if (isNumeric(startInput) == false || isNumeric(destinationInput) == false) {
@@ -180,8 +179,8 @@ public class FinalProject {
         */
 
         //testing out shortest path method
-        ConnectionNode start = new ConnectionNode("1888");
-        ConnectionNode end = new ConnectionNode("11259");
+        //ConnectionNode start = new ConnectionNode("1888");
+        //ConnectionNode end = new ConnectionNode("11259");
 
         //System.out.print(Section1.shortestPath(start, end));
 
