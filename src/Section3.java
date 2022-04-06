@@ -9,6 +9,27 @@
     Maximum time allowed is 23:59:59.
      */
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Section3 {
+
+    public ArrayList<String[]> readInFile(File stopTimesFile) throws FileNotFoundException {
+
+        Scanner scanner = new Scanner(stopTimesFile);
+        ArrayList<String[]> stopTimes = new ArrayList<>();
+        while (scanner.hasNextLine()) {
+            String currentLine = scanner.nextLine();
+            String stopTimesArr[] = currentLine.split(",");
+            stopTimes.add(stopTimesArr);
+
+
+        }
+
+            return stopTimes;
+    }
 
 }
