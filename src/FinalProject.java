@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -11,7 +12,7 @@ public class FinalProject {
     public static File TRANSFERS;
 
     //constructor method for loading file paths into  static variable names
-    public FinalProject(String stopsPath, String stopTimesPath, String transfersPath){
+    public FinalProject(String stopsPath, String transfersPath, String stopTimesPath){
 
         STOPS = new File(stopsPath);
         STOP_TIMES = new File(stopTimesPath);
@@ -156,7 +157,7 @@ public class FinalProject {
 
 
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
 
         String stopsPath = "C:\\Users\\tarag\\OneDrive\\Documents\\SecondYear\\Semester2\\Algo +Data 2\\src\\stops.txt";
         String stopTimesPath = "C:\\Users\\tarag\\OneDrive\\Documents\\SecondYear\\Semester2\\Algo +Data 2\\src\\stop_times.txt";
@@ -165,7 +166,9 @@ public class FinalProject {
         //turning paths into files
         new FinalProject(stopsPath, transfersPath, stopTimesPath);
 
-        new Section1(STOPS, STOP_TIMES, TRANSFERS);
+        //new Section1(STOPS, TRANSFERS, STOP_TIMES);
+
+        new Section3(STOP_TIMES);
 
         //testing out calling the Section1 class in the final project file.
 
@@ -184,7 +187,9 @@ public class FinalProject {
 
         //System.out.print(Section1.shortestPath(start, end));
 
-        FinalProject.userInteraction();
+        //FinalProject.userInteraction();
+
+
 
 
 
