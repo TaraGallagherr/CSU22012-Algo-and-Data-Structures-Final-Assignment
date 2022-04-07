@@ -111,9 +111,11 @@ public class Section1 {
                 ConnectionNode node2 = ConnectionNodesMap.get(finalStops.get(i));
                 Double edgeWeight = costs.get(i);
 
+                if(node1 != null) {
 
-                node1.addEdgeBeside(new Edge(edgeWeight,node1,node2));
-                ConnectionNodesMap.put(startStops.get(i), node1);
+                    node1.addEdgeBeside(new Edge(edgeWeight, node1, node2));
+                    ConnectionNodesMap.put(startStops.get(i), node1);
+                }
 
             }
 
@@ -224,6 +226,12 @@ public class Section1 {
                 //initialising start noed to end and working backwards to find al nodes on the SP found
                 for (ConnectionNode nodeOnShortestPath = endStop; nodeOnShortestPath != null; nodeOnShortestPath = nodeOnShortestPath.getPrevNode()) {
                     shortestPath.add(nodeOnShortestPath);
+                }
+
+                //reversing the list to give the stops on the SP from the start to the destination, not hte destination to the stop
+                for (int k = 0; k < shortestPath.size() -1; k++)
+                {
+                    shortestPath.add(k, shortestPath.remove(shortestPath.size() -1));
                 }
 
 
