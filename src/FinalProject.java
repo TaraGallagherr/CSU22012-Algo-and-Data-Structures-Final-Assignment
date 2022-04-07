@@ -116,6 +116,7 @@ public class FinalProject {
 
                     }
 
+
                     else if (input == 3){
 
                     }
@@ -168,7 +169,7 @@ public class FinalProject {
 
         //new Section1(STOPS, TRANSFERS, STOP_TIMES);
 
-        new Section3(STOP_TIMES);
+        new Section3(STOP_TIMES, "5:25:00");
 
         //testing out calling the Section1 class in the final project file.
 
