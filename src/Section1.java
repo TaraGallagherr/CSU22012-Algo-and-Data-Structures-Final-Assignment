@@ -1,11 +1,7 @@
-
-
 import java.io.File;
-import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.*;
-
-
+import java.util.ArrayList;
     /*Finding shortest paths between 2 bus stops (as input by the user),
     returning the list of stops en route as well as the associated “cost”.
     Stops are listed in stops.txt and connections (edges) between them come from stop_times.txt
@@ -34,9 +30,7 @@ main in full project which will call methods in all part 1 ,2 and 3 classes
 this class should use the shortest path class to find the shortest path between 2 bus stops, the stops en route
  and the cost of the journey
  */
-
 public class Section1 {
-
         public static ArrayList<String> startStops = new ArrayList<String>();
         public static ArrayList<String> finalStops = new ArrayList<String>();
         //private static double cost;
@@ -45,36 +39,69 @@ public class Section1 {
         public static HashMap<String,ConnectionNode> ConnectionNodesMap = new HashMap<>();
         public ArrayList<String[]> tripIdStops = new ArrayList<>();
         public static Double cost; //needed for when finding the shortest path
-
+        public  ArrayList<String> stopIDs = new ArrayList<>();
+        int i = 0;
 
     String stopsPath = "C:\\Users\\tarag\\OneDrive\\Documents\\SecondYear\\Semester2\\Algo +Data 2\\src\\stops.txt";
     String stopTimesPath = "C:\\Users\\tarag\\OneDrive\\Documents\\SecondYear\\Semester2\\Algo +Data 2\\src\\stop_times.txt";
     String transfersPath = "C:\\Users\\tarag\\OneDrive\\Documents\\SecondYear\\Semester2\\Algo +Data 2\\src\\transfers.txt";
 
-
-
     //this constructor method reads through the three files passed in (stop, transfers and stoptimes)
     //it creates array lists of the start stops, the end stops and the journey weights
     //it then takes these three arrays and
-        public Section1(File stopsFile, File transfersFile, File stopTimesFile) throws FileNotFoundException
+
+
+        public boolean validStops(String start, String destination){
+
+            boolean startTrue = false;
+            boolean destinationTrue = false;
+            for(var i=0;i< stopIDs.size();i++)
+            {
+                if(stopIDs.get(i).equals(start)){startTrue = true;}
+                if(startTrue){
+                    break;
+                }
+            }
+            for(var i=0;i< stopIDs.size();i++)
+            {
+                if(stopIDs.get(i).equals(destination)){destinationTrue = true;}
+                if(destinationTrue){
+                    break;
+                }
+            }
+
+            if(startTrue && destinationTrue){
+                return true;
+            }
+
+            else{
+                return false;
+            }
+        }
+        public Section1(File stopsFile,  File stopTimesFile, File transfersFile) throws FileNotFoundException
         {
             Scanner sc1 = new Scanner(stopsFile);
 
+            String stopsArray[];
 
             while(sc1.hasNextLine())
             {
                 String stop = sc1.nextLine();
-                String stopsArr[] = stop.split(",");
-                ConnectionNode node = new ConnectionNode(stopsArr[0]);  //names the current connection node the start stop given in the stops file
-                ConnectionNodesMap.put(stopsArr[0], node);
+                 stopsArray = stop.split(",");
+                ConnectionNode node = new ConnectionNode(stopsArray[0]);  //names the current connection node the start stop given in the stops file
+                ConnectionNodesMap.put(stopsArray[0], node);
+
+                if(stopsArray[0] != null) {
+                    stopIDs.add(i, stopsArray[0]); //putting current stopID into stopIDs array to check if stop is valid
+                }
+
+                i++; // to add next stop to stopIDs array
             }
 
             sc1.close();
 
-
             //in the transfers file, all lines are edges so all lines can be added
             Scanner sc2 = new Scanner(transfersFile);
-
 
             while(sc2.hasNextLine())
             {
@@ -91,19 +118,14 @@ public class Section1 {
 
                         costs.add(2.0);
                     }
-
                     //the cost for transfer type 2 is min time/100 --> min_time stored at edgeArr[3]
                     else if (edgeArr[2].equals("2")) {
                         costs.add(Double.parseDouble(edgeArr[3]) / 100);
                     }
-
                     else {
                         costs.add(1.0);
                     }
                 }
-
-
-
             sc2.close();
 
             for(int i = 1;i < startStops.size();i++) {
@@ -116,20 +138,22 @@ public class Section1 {
                     node1.addEdgeBeside(new Edge(edgeWeight, node1, node2));
                     ConnectionNodesMap.put(startStops.get(i), node1);
                 }
-
             }
 
             Scanner sc3 = new Scanner(stopTimesFile);
+            String stopTimesArr[];
+
 
             while(sc3.hasNextLine()) {
 
-                String a = sc3.nextLine();
-                String stopTimesArr[] = a.split(",");   //splitting the string into an array with an element
-                                                                //at each comma
+                String a = sc3.nextLine(); //skip first line
 
+                  stopTimesArr = a.split(",");   //splitting the string into an array with an element
+                                                                //at each comma
                 String tripID = stopTimesArr[0];
 
                 String stopID = stopTimesArr[3];
+
                 String TripIDandStop[] = {tripID,stopID}; //array to be used in each element of the array list
                 // details the trip id being referred to and the stop where the trip ends
 
@@ -154,7 +178,6 @@ public class Section1 {
                     ConnectionNodesMap.put(node1.name, node1);
                     //node1.name = node2;
                     node1 = node2;
-
                 }
 
                 else {
@@ -162,13 +185,9 @@ public class Section1 {
                     ConnectionNode node2 = ConnectionNodesMap.get(StopID2);
                     node1 = node2;
                 }
-
             }
 
         }  //end of constructor method Section1(files as parameters)
-
-        //STILL TO ADD
-            // to add methods on finding the SP and then returning an array list of all intermediate stops included on the SP
 
             //this mehtod computes SP from startStop to all nodes
             // it returns the path of the SP betwenn start and destination node
@@ -180,7 +199,7 @@ public class Section1 {
 
                 //creating empty priority queue of connectionNodes
                 // will access the weights to compare for SP
-                PriorityQueue<ConnectionNode > priorityQueue = new PriorityQueue<>();
+                PriorityQueue<ConnectionNode> priorityQueue = new PriorityQueue<>();
                 //inserting the source node into the PQ
                 priorityQueue.add(startStop);
 
@@ -214,7 +233,6 @@ public class Section1 {
                         }
 
                     }
-
                 }
 
                 //need to add eroor handling --> to only return shortest path if the path names are valid etc
@@ -233,7 +251,6 @@ public class Section1 {
                 {
                     shortestPath.add(k, shortestPath.remove(shortestPath.size() -1));
                 }
-
 
                 return shortestPath;
 

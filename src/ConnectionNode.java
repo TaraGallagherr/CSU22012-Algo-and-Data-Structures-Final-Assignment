@@ -48,8 +48,8 @@ import java.util.List;
         }
 
         @Override
-        public int compareTo(ConnectionNode otherVertex) {
-            return Double.compare(this.minDist, otherVertex.minDist);
+        public int compareTo(ConnectionNode otherNode) {
+            return Double.compare(this.minDist, otherNode.minDist);
         }
 
     }
