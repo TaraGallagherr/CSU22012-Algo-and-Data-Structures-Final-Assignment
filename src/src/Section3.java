@@ -11,6 +11,7 @@
 
 import java.io.*;
 import java.lang.reflect.Array;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class Section3 {
@@ -23,11 +24,41 @@ public class Section3 {
     //it then makes an array list of all matching times to the string time inputted
     //this array list is then ordered by trip_id and printed out for the user
     //Section3 is only executed if the time input is correct
-    public Section3(File stopTimesFile, String userTimeEntry) throws IOException {
+    public Section3(File stopTimesFile) throws IOException {
 
-            //public ArrayList<TripInfo> validTrips; //arraylist of TripInfo objects
+        //public ArrayList<TripInfo> validTrips; //arraylist of TripInfo objects
+         String userTimeEntry = "";
 
-                validTrips = new ArrayList<>(); //makes array list if no issues reading file
+        validTrips = new ArrayList<>(); //makes array list if no issues reading file
+
+       // ArrayList<String> results = new ArrayList();
+
+        Scanner input = new Scanner(System.in);
+        boolean properTime = false;
+        //boolean exit = true;
+
+        do {
+            System.out.println("Enter an arrival time in the format HH:MM:SS: ");
+           // boolean validT = false;
+
+            userTimeEntry = input.next();
+
+            properTime = validTime(userTimeEntry);
+
+            //else {
+            if (properTime == false) {
+                System.out.println("Your input is not a valid time. Please have the right format and do not exceed" +
+                        " 23:59:59");
+            }
+
+        }
+        while(properTime == false);
+
+        if(properTime == true) {
+            try {
+
+                //System.out.println(matchingTimes(userTimeEntry));
+
 
                 //calling readStopTimesFile method
                 //readStopTimesFile(stopTimesFile);
@@ -38,24 +69,27 @@ public class Section3 {
 
                 //method call to print out matching times arrayList
                 //printing out the results array
-                System.out.println(matchingTimes(userTimeEntry, stopTimesFile));
+                //System.out.println(matchingTimes(userTimeEntry));
+                    readStopTimesFile(stopTimesFile);
 
+                 if(matchingTimes(userTimeEntry) == null) {
+                    System.out.println("Arrival Time Could not be found");
+                }
 
+                 else{
+                     System.out.println(matchingTimes(userTimeEntry));
+                 }
+            } catch (Exception e) {
+                System.out.println("Not a valid input.");
             }
-
-
-
-
+        }
+    }
 
         public void readStopTimesFile(File stopTimesFile) throws IOException {
 
             int lineCount = 0;
-            //int lineSize = 9; //---> represents how many elements of trip info in a line
-
-            //Scanner scanner = new Scanner(stopTimesFile);
-            //ArrayList<String[]> stopTimes = new ArrayList<>();
-
             BufferedReader br = new BufferedReader(new FileReader(stopTimesFile));
+            //int listCount = 0;
             String str;
             try {
                 while ((str = br.readLine()) != null) {
@@ -77,67 +111,6 @@ public class Section3 {
                         //String currentLine = scanner.nextLine();
                         //String stopTimesArr[] = currentLine.split(",");
                         //stopTimes.add(stopTimesArr);
-
-                        /*int i;
-
-                        for (i = 0; i <= lineSize ; i++) {
-
-                            if (!currentLine[i].equals("") && i == 0) {
-
-                                tripID = Integer.parseInt(currentLine[i]);
-                            }
-
-                            if (!currentLine[i].equals("") && i == 1) {
-
-                                arrivalTime = currentLine[i];
-                            }
-
-                            if (!currentLine[i].equals("") && i == 2) {
-
-                                departureTime = currentLine[i];
-                            }
-
-
-                            if (!currentLine[i].equals("") && i == 3) {
-
-                                stopID = Integer.parseInt(currentLine[i]);
-                            }
-
-                            if (!currentLine[i].equals("") && i == 4) {
-
-                                stopSequence = Integer.parseInt(currentLine[i]);
-                            }
-
-                            if (!currentLine[i].equals("") && i == 5) {
-
-                                stopHeadsign = Integer.parseInt(currentLine[i]);
-                            }
-
-                            if (!currentLine[i].equals("") && i == 6) {
-
-                                pickupType = Integer.parseInt(currentLine[i]);
-                            }
-
-                            if (!currentLine[i].equals("") && i == 7) {
-
-                                dropOffType = Integer.parseInt(currentLine[i]);
-                            }
-
-                            if (currentLine.length == 9 && !currentLine[i].equals("") && i == 8 ) {
-
-                                shapeDistTraveled = Double.parseDouble(currentLine[i]);
-                            }
-
-                            else{
-                                break;
-                            }
-
-                        }
-
-
-                        i = 0; //setting back to 0 to use for loop again
-
-                         */
 
                          arrivalTime = currentLine[1];
                          departureTime = currentLine[2];
@@ -168,19 +141,18 @@ public class Section3 {
                         if (validTime(arrivalTime) && validTime(departureTime)) {
                             validTrips.add(new TripInfo(tripID, arrivalTime, departureTime, stopID, stopSequence,
                                     stopHeadsign, pickupType, dropOffType, shapeDistTraveled));
-
+                               // listCount ++;
                     }
 
                         }
 
                         lineCount++;
                     }
+                //System.out.println(validTrips);
         } catch (Exception e) {
                 System.out.println(e);
             }
         }
-                
-                
 
                 //this method checks to see if the time is valid and returns a boolean with the result
                 // needed for part 3 but also wont add a
@@ -212,7 +184,6 @@ public class Section3 {
                         return false;
                     }
 
-
                     //checking to see if the time is valid and returning a boolean
                     //comparing current variables with the max times
                     if((currentHours <= MAX_HRS) && (currentMinutes <= MAX_MIN) && (currentSeconds <= MAX_SEC))
@@ -222,10 +193,11 @@ public class Section3 {
                         return false;  //invalid time
                 }
 
-                public ArrayList<TripInfo> matchingTimes(String time, File stopTimesFile) throws IOException {
+                //public ArrayList<TripInfo> matchingTimes(String time, File stopTimesFile) throws IOException {
+                public ArrayList<TripInfo> matchingTimes(String time) throws IOException {
 
                         // create array list of all valid trips
-                         readStopTimesFile(stopTimesFile);
+                        // readStopTimesFile(stopTimesFile);
 
                           ArrayList<TripInfo> results = new ArrayList<>();
                           String currentTime = "";
@@ -234,64 +206,31 @@ public class Section3 {
                          for(int i = 0; i < validTrips.size(); i++){
 
                              currentTrip = validTrips.get(i);
+                             currentTime = validTrips.get(i).getTime();
+                             currentTime = currentTime.replaceAll("\\s", "");
 
-                            // currentTime = currentTrip.getTime();
-                             currentTime = currentTrip.arrival_time;
                              if(currentTime.equals(time)){
 
                                  //adding currentTrip to results array list if the arrival time matches
                                  results.add(currentTrip);
                              }
-
                          }
 
-                        return results;
+                        return orderResults(results);  //return the results in order
+                        //return results;
                 }
 
                 public ArrayList<TripInfo> orderResults(ArrayList<TripInfo> results){
 
-                    /*int indexOfArrivalTime = 1;
-                   // Map<String, ArrayList<String>> Time_Line = new TreeMap<>();
-
-                    //for (int i = 0; i < results.size(); i++) {
-                        TripInfo currentTrip = results.get(i);
-                        int stopID = Integer.parseInt(currentTrip.arrival_time);
-                        //String[] values = line.split(",");
-                        //String arrivalTime = values[indexOfArrivalTime];
-
-                    //Collections.sort(results, (currentTrip) -> parseId(a) - parseId(b));
-
-                   // return results;
-
-                     */
-
-
-                        /*//ArrayList<TripInfo> sort = new ArrayList<TripInfo>();
-                        List<TripInfo> sort = new ArrayList<>(TripInfo);
-                            Collections.sort(sort, new Comparator<TripInfo>() {
-                                public int compare(TripInfo stop1, TripInfo stop2) {
-                                    return stop1.getStopID().compareTo(stop2.getStopID());
-                                }
-                    }
-                            );
-
-                    return sort;
-
-                         */
-
-                   // results.sort(Comparator.comparing(b -> b.getStopID()));
-                    Collections.sort(results, Comparator.comparing(TripInfo::getTripID));
-                    //Collections.sort(results, (b1, b2) -> b1.getTripID().compareTo(b2.getTripID()));
+                    Collections.sort(results, Comparator.comparingInt(Section3::TripIDInt));
 
                     return results;
                 }
 
+                 static int TripIDInt(TripInfo t) {
+                     return Integer.parseInt(t.getTripID());
+                 }
 
-                /*static int parseId(String line) {
-                     return Integer.parseInt(line.split(",")[0]);
-                }
-
-                 */
+            }
 
 
-}

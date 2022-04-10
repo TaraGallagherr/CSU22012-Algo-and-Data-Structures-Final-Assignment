@@ -1,7 +1,5 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -19,7 +17,7 @@ public class FinalProject {
         TRANSFERS = new File(transfersPath);
     }
 
-    public static void userInteraction() throws FileNotFoundException {
+    public static void userInteraction() throws IOException {
 
         String stopsPath = "C:\\Users\\tarag\\OneDrive\\Documents\\SecondYear\\Semester2\\Algo +Data 2\\src\\stops.txt";
         String stopTimesPath = "C:\\Users\\tarag\\OneDrive\\Documents\\SecondYear\\Semester2\\Algo +Data 2\\src\\stop_times.txt";
@@ -28,77 +26,70 @@ public class FinalProject {
         //turning paths into files
         new FinalProject(stopsPath, transfersPath, stopTimesPath);
 
-        new Section1(STOPS, STOP_TIMES, TRANSFERS);
+        Section1 Section1 = new Section1(STOPS, STOP_TIMES, TRANSFERS);
 
         boolean quit = false;
 
-        do{
+        do {
+
             Scanner userInput = new Scanner(System.in);
+
             System.out.println("Please select one of the following options by entering 1,2,3 or 0 to exit the program");
             System.out.println("1 = Find the shortest path between 2 bus stops " + "\n"
                     + "2 = Search for a particular bus stop " + "\n"
                     + "3 = Search for an arrival time");
 
-            if(userInput.hasNextInt()){
+            if (userInput.hasNextInt()) {
 
                 int input = userInput.nextInt();
                 userInput.nextLine();
-                if(input >= 0 && input <=3){
+                if (input >= 0 && input <= 3) {
 
-                    if(input == 0){
+                    if (input == 0) {
                         System.out.println("Exiting the program");
                         quit = true;
-                    }
-
-                    else if ( input == 1) {
-
+                    } else if (input == 1) {
                         String startInput;
                         String destinationInput = "";
-                        //Double cost = Section1.cost;
-
                         //making a hashMap for the stops for dijkstra
                         HashMap<String, ConnectionNode> stops = Section1.ConnectionNodesMap;
 
-                        System.out.println("PLease enter a starting bus stop ID:");
-                        //USER input
-                        String tempStart = userInput.nextLine();
-                        startInput = tempStart;
+                        boolean valid = false;
+                        do {
 
-                        System.out.println("Please enter a destination bus stop ID: ");
-                        //user input
-                        String tempDest ;
-                        tempDest = userInput.nextLine();
-                        destinationInput = tempDest;
+                            System.out.println("PLease enter a starting bus stop ID:");
+                            //USER input
+                            String tempStart = userInput.nextLine();
+                            startInput = tempStart;
 
+                            System.out.println("Please enter a destination bus stop ID: ");
+                            //user input
+                            String tempDest;
+                            tempDest = userInput.nextLine();
+                            destinationInput = tempDest;
 
-
-                        boolean check = true;
-
-                        //will continue to error check until the stops entered are valid
-                        while (check != true) {
                             //error handling
                             // calling isNumeric method to make the stop IDs entered are check
                             if (isNumeric(startInput) == false || isNumeric(destinationInput) == false) {
                                 System.out.println("Your start and destination stop ID should only contain digits and should not be null");
-                                check = false;
+
                             }
 
                             //also need to make sure the bus stop IDs entered exist
 
-                            if (stops.get(startInput) == null || stops.get(destinationInput) == null) {
-
-                                System.out.println("Sorry the stops entered do not exist. try again");
-                                check = false;
+                            else if (Section1.validStops(startInput, destinationInput) == false) {
+                                System.out.println("none or one of the stops entered does not exist. try again");
                             }
 
                             //otherwise the stops are valid and can continue onto answering part 1
                             else {
                                 //setting to false if they are valid so it will exit hte while loop
-                                check = false;
+                                valid = true;
                             }
 
-                        }
+                        } while (!valid);
 
+                        valid = false;
                         ConnectionNode source = stops.get(startInput); //  ConnectionNode of the start stop
                         ConnectionNode destination = stops.get(destinationInput);// ConnectionNode object of the destination stop
 
@@ -109,37 +100,38 @@ public class FinalProject {
                         //Section1.cost ---> give the cost of the SP calculated--> print it out
                         System.out.println("Cost of the Path: " + Section1.cost + "\n");
 
-                    }
+                    } else if (input == 2) {
+
+                        System.out.print(
+                                "Please enter the bus stop's full name or by the first few characters in the name: ");
+                        String stopInput = userInput.nextLine();
+
+                        new Section2(STOPS, stopInput);
 
 
-                    else if( input == 2){
+                    } else if (input == 3) {
+                        //String userTimeInput = " ";
+                        // System.out.print("Please enter an arrival time: ");
 
-                    }
-
-
-                    else if (input == 3){
-
+                        //will error handle inside the
+                        new Section3(STOP_TIMES);
                     }
 
                 }
 
-                else{
-                    System.out.println("Please enter a check number");
-                }
 
+            //number > 3 or < 1
+            else {
+                System.out.println("Please check your number entered");
             }
+        }
 
+            //a letter/ symbol entered
             else{
-                System.out.print("Please enter a check number (1,2,3) or press 0 to exit the programme" );
+                System.out.println("Please enter numbers only" );
             }
-
-
-
-
         }
         while(!quit);
-
-
 
     }
 
@@ -169,7 +161,9 @@ public class FinalProject {
 
         //new Section1(STOPS, TRANSFERS, STOP_TIMES);
 
-        new Section3(STOP_TIMES, "5:25:00");
+        //new Section3(STOP_TIMES);
+
+        userInteraction();
 
         //testing out calling the Section1 class in the final project file.
 
@@ -189,13 +183,8 @@ public class FinalProject {
         //System.out.print(Section1.shortestPath(start, end));
 
         //FinalProject.userInteraction();
-
-
-
-
-
-
-
     }
+
+
 
 }
